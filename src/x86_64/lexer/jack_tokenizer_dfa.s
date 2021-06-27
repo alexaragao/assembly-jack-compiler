@@ -123,6 +123,13 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_1
 
+    cmp al, 0
+    je %%stop_peek
+
+    mov rdx, JACK_TOKEN_INVALID
+    call %%push_character_token
+    call %%peek_character
+
     jmp %%stop_peek
 
   %%DFA_STATE_1:

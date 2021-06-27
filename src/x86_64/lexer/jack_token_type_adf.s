@@ -16,6 +16,8 @@ section .data
   
   mov rax, 0
 
+  mov rdx, JACK_TOKEN_IDENTIFIER
+
   %%DFA_STATE_0:
     call %%peek_character
 
@@ -84,6 +86,9 @@ section .data
   %%DFA_STATE_3:
     call %%peek_character
     
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_4:
@@ -128,6 +133,9 @@ section .data
   %%DFA_STATE_8:
     call %%peek_character
     
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_9:
@@ -206,6 +214,9 @@ section .data
   %%DFA_STATE_18:
     call %%peek_character
     
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_19:
@@ -260,6 +271,9 @@ section .data
   %%DFA_STATE_25:
     call %%peek_character
 
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_26:
@@ -304,6 +318,9 @@ section .data
   %%DFA_STATE_30:
     call %%peek_character
   
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_31:
@@ -333,6 +350,9 @@ section .data
   ; FINAL
   %%DFA_STATE_34:
     call %%peek_character
+
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -380,6 +400,9 @@ section .data
   %%DFA_STATE_40:
     call %%peek_character
 
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_41:
@@ -426,6 +449,9 @@ section .data
   %%DFA_STATE_46:
     call %%peek_character
   
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_47:
@@ -440,6 +466,9 @@ section .data
   %%DFA_STATE_48:
     call %%peek_character
     
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_49:
@@ -473,6 +502,9 @@ section .data
   %%DFA_STATE_52:
     call %%peek_character
     
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_53:
@@ -491,12 +523,12 @@ section .data
 
     jmp %%stop_peek
   
+  ; FINAL
   %%DFA_STATE_55:
     call %%peek_character
     
-    ; FINAL
-    cmp al, ASCII_r
-    je %%DFA_STATE_89
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -531,14 +563,17 @@ section .data
   %%DFA_STATE_59:
     call %%peek_character
     
-    cmp al, ASCII_r
-    je %%DFA_STATE_89
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
   ; FINAL
   %%DFA_STATE_60:
     call %%peek_character
+
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -565,8 +600,8 @@ section .data
   %%DFA_STATE_63:
     call %%peek_character
     
-    cmp al, ASCII_r
-    je %%DFA_STATE_89
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -605,6 +640,9 @@ section .data
   ; FINAL
   %%DFA_STATE_68:
     call %%peek_character
+
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -660,6 +698,9 @@ section .data
   %%DFA_STATE_75:
     call %%peek_character
 
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_76:
@@ -690,6 +731,9 @@ section .data
   %%DFA_STATE_79:
     call %%peek_character
 
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_80:
@@ -712,6 +756,9 @@ section .data
   %%DFA_STATE_82:
     call %%peek_character
 
+    cmp al, 0
+    je %%is_keyword
+
     jmp %%stop_peek
   
   %%DFA_STATE_83:
@@ -725,6 +772,9 @@ section .data
   ; FINAL
   %%DFA_STATE_84:
     call %%peek_character
+
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -755,6 +805,9 @@ section .data
   ; FINAL
   %%DFA_STATE_88:
     call %%peek_character
+
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -801,6 +854,9 @@ section .data
   ; FINAL
   %%DFA_STATE_94:
     call %%peek_character
+
+    cmp al, 0
+    je %%is_keyword
 
     jmp %%stop_peek
   
@@ -980,17 +1036,10 @@ section .data
     ret
   
   %%stop_peek:
-    cmp al, 0
-    je %%is_keyword
-
-    jmp %%is_identifier
+    jmp %%end
 
   %%is_keyword:
     mov rdx, JACK_TOKEN_KEYWORD
-    jmp %%end
-  
-  %%is_identifier:
-    mov rdx, JACK_TOKEN_IDENTIFIER
     jmp %%end
 
   %%end:

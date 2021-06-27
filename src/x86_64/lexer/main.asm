@@ -3,7 +3,7 @@
 %include "../x86_64.inc"
 %include "jack_tokens.inc"
 %include "jack_tokenizer_dfa.s"
-%include "jack_lexer_dfa.s"
+%include "jack_token_type_adf.s"
 %include "jack_xml_writer.s"
 
 section .data
@@ -84,6 +84,11 @@ _start:
       print rtoken
       print token
       print ltoken
+
+      inc r10
+
+      cmp r10, 1048576
+      je close_xml
       
       jmp jack_tokenizer_loop
 
