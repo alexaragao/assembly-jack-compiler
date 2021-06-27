@@ -1,0 +1,11 @@
+.tmp/
+build/
+
+# Ignore compile files
+main
+main.o
+
+# Ignore old files
+*.old.s
+*.old.asm
+*.old.inc

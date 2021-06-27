@@ -17,14 +17,10 @@ How to run locally:
 Detect your system architecture:
 - **Linux**: `uname -m`
 
-Generate `.o` file:
-- **Linux**: `nasm -f elf64 -o main.o main.asm`
+> Currently this project only supports 64-bit architecture
 
-Generate executable file:
-- **Linux**: `ld main.o -o main`
-
-Run the program:
-- **Linux**: `./main`
+Run `compile-x86_64.sh` file:
+- **Linux**: `bash compile-x86_64.sh`
 
 ## Contribuitors
 <table>
