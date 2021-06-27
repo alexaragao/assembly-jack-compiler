@@ -1,35 +1,50 @@
 %include "../../ascii.inc"
 
 %include "../x86_64.inc"
-%include "jack_tokens.inc"
-%include "jack_tokenizer_dfa.s"
-%include "jack_token_type_adf.s"
-%include "jack_xml_writer.s"
+%include "../lexer/jack_tokens.inc"
+%include "../lexer/jack_tokenizer_dfa.s"
+%include "../lexer/jack_token_type_adf.s"
+%include "jack_xmler.s"
 
 section .data
-  marker db "Marker", 0
-  filename db "../../../data/jack/Square.jack", 0
-  output_filename db "./build/output.xml", 0
+  ERR_INVALID_ARGC db "Usage: xmler [input] [output]",10,10,"- input:",9,"path to a .jack file",10,"- output:",9,"name of the output .xml file",10,0
+  ERR_FILE_NOT_FOUND db "[Error 2] No such file: ",0
+  ERR_INSUFFICIENT_FILE_PERMISSIONS db "[Error 13] Insufficient permissions to open file: ",0
+  ERR_INPUT_FILE db "[Error 1] Could not open input file",10,"Could not find the reason. Sorry.",0
+  newline db 10,0
 
 section .bss
-  _digit resb 8
   source resb 1024 * 5 ; This allows to save content up to 5 kB
+  error resb 1024
 
 section .text
   global _start
 
 _start:
+  ; Check if user has entered with right argument count (must be 3)
+  pop rcx ; argc
+  
+  cmp rcx, 3
+  jne raise_err_invalid_argc
+
+  pop rdi ; &path
+  pop rdi ; &arg[1] (input_file_path)
+
   ; OPEN the file
+  ; &input_file_path must be in RDI
   open_jack_file:
     mov rax, SYS_OPEN
-    mov rdi, filename
     mov rsi, O_RDONLY
     mov rdx, 0644o
     syscall
 
-    ; STACK the &filedescriptor of the file in the RAX register,
-    ; in case of error, the error code is in the RAX register.
-    push rax
+
+  cmp rax, 0
+  jl raise_err_file_open
+  
+  ; STACK the &filedescriptor of the file in the RAX register,
+  ; in case of error, the error code is in the RAX register.
+  push rax
 
   ; READ the file and save it content into 'source' reserved bytes.
   read_jack_file:
@@ -47,10 +62,12 @@ _start:
     syscall
 
   open_xml:
+    pop rdi ; &arg[2] (output_file_path)
+    
     ; OPEN the .xml file
+    ; &output_file_path must be in RDI
     mov rax, SYS_OPEN
-    mov rdi, output_filename
-    mov rsi, O_CREAT + O_WRONLY
+    mov rsi, O_CREAT + O_WRONLY + O_APPEND
     mov rdx, 0644o
     syscall
 
@@ -103,7 +120,32 @@ _start:
     mov rax, SYS_CLOSE
     syscall
 
-    jmp _exit
-
-  _exit:
     exit 0
+
+raise_err_invalid_argc:
+  print ERR_INVALID_ARGC
+  exit 1
+
+raise_err_file_open:
+  neg rax
+
+  cmp rax, 2
+  je raise_err_file_not_found
+
+  cmp rax, 13
+  je raise_err_insufficient_file_permissions
+
+  print ERR_INPUT_FILE
+  exit 1
+
+raise_err_insufficient_file_permissions:
+  print ERR_INSUFFICIENT_FILE_PERMISSIONS
+  print rdi
+  print newline
+  exit 13
+
+raise_err_file_not_found:
+  print ERR_FILE_NOT_FOUND
+  print rdi
+  print newline
+  exit 2

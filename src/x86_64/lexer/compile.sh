@@ -1,5 +1,3 @@
-# Delete old `.xml` file:
-rm -r ./build
 mkdir ./build
 
 # Generate `.o` file:

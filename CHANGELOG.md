@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.0.1 - 2021-06-26
 ### Lexer
-  - Bugfix: wrong ADF transitions at token_type_adf
+  - Bugfix: wrong DFA transitions at token_type_dfa
   - Feature: now add invalid characters to .xml
 
 ## 1.0.0 - 2021-06-26
