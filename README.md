@@ -2,12 +2,12 @@
 
 ![Assembly](https://img.shields.io/badge/-Assembly-FF6946?logo=AssemblyScript)
 
-<div style="width: 100%; display: flex; justify-content: center">
+<div style="text-align: center">
   <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/icons/assembly.svg" width="250">
 </div>
 
 ## Description
-A `.jack` program compiler create with assembly language.
+A `.jack` compiler program coded in assembly language. See [documentation](./docs/) for more details.
 
 ## Local Development
 How to run locally:
@@ -21,6 +21,9 @@ Detect your system architecture:
 
 Run `compile-x86_64.sh` file:
 - **Linux**: `bash compile-x86_64.sh`
+
+## Also implemented in
+[![Elixir](https://img.shields.io/badge/Elixir-9378C9?logo=elixir)](https://github.com/nathyanemoreno/elixir-jack-compiler)
 
 ## Contribuitors
 <table>

@@ -2,8 +2,7 @@
 
 %include "../x86_64.inc"
 %include "../lexer/jack_tokens.inc"
-%include "../lexer/jack_tokenizer_dfa.s"
-%include "../lexer/jack_token_type_adf.s"
+%include "../lexer/jack_tokenizer.s"
 %include "jack_xmler.s"
 
 section .data
@@ -11,11 +10,13 @@ section .data
   ERR_FILE_NOT_FOUND db "[Error 2] No such file: ",0
   ERR_INSUFFICIENT_FILE_PERMISSIONS db "[Error 13] Insufficient permissions to open file: ",0
   ERR_INPUT_FILE db "[Error 1] Could not open input file",10,"Could not find the reason. Sorry.",0
+  
+  rtoken db "TOKEN <",0
+  ltoken db ">",10,0
   newline db 10,0
 
 section .bss
   source resb 1024 * 5 ; This allows to save content up to 5 kB
-  error resb 1024
 
 section .text
   global _start
@@ -37,7 +38,6 @@ _start:
     mov rsi, O_RDONLY
     mov rdx, 0644o
     syscall
-
 
   cmp rax, 0
   jl raise_err_file_open
@@ -67,36 +67,50 @@ _start:
     ; OPEN the .xml file
     ; &output_file_path must be in RDI
     mov rax, SYS_OPEN
-    mov rsi, O_CREAT + O_WRONLY + O_APPEND
+    mov rsi, O_CREAT + O_WRONLY
     mov rdx, 0644o
     syscall
 
     push rax ; PUSH &filedescriptor to stack
-    
-    ; &filedescriptor should be in RAX
-    write_open_tag_tokens_to_xml
+  
+    ; write <tokens>
+    mov rdi, rax
 
-  jack_tokenizer:
+    mov rax, ASCII_LESSTHAN
+    write_digit_to_file rdi
+    mov rax, XML_TAG_TOKENS
+    write_rax_to_file rdi
+    mov rax, ASCII_GREATERTHAN
+    write_digit_to_file rdi
+    mov rax, ASCII_NEWLINE
+    write_digit_to_file rdi
+
+  call_jack_tokenizer:
     mov rsi, 0 ; Start char index
     mov r10, 0 ; Prevent infinite loop (x64 only)
 
-    jack_tokenizer_loop:
-      jack_tokenizer_dfa source, rsi
+    call_jack_tokenizer_loop:
+      jack_tokenizer source, rsi
       ; RAX -> &token
       ; RBX -> file content
       ; RCX -> token length
       ; RDX -> jack token type
       ; RSI -> last char index
-      
+
       cmp rcx, 0
       je close_xml
 
       mov rbx, rdx
-      mov rdx, rax
-      mov rax, [rsp] ; &filedescriptor (peek stack)
+      mov rdx, rax ; &token
+      mov rdi, [rsp] ; &filedescriptor (peek stack)
+      
+      mov rax, ASCII_TAB
+      write_digit_to_file rdi
+      
+      write_token_to_xml rdi
 
-      ; &filedescriptor should be in RAX
-      write_token_to_xml
+      mov rax, ASCII_NEWLINE
+      write_digit_to_file rdi
 
       print rtoken
       print token
@@ -107,13 +121,21 @@ _start:
       cmp r10, 1048576
       je close_xml
       
-      jmp jack_tokenizer_loop
+      jmp call_jack_tokenizer_loop
 
   close_xml:
-    pop rax ; POP &filedescriptor to stack
+    pop rdi ; POP &filedescriptor to stack
 
-    ; &filedescriptor should be in RAX
-    write_close_tag_tokens_to_xml
+    ; write </tokens>
+    
+    mov rax, ASCII_LESSTHAN
+    write_digit_to_file rdi
+    mov rax, ASCII_SOL
+    write_digit_to_file rdi
+    mov rax, XML_TAG_TOKENS
+    write_rax_to_file rdi
+    mov rax, ASCII_GREATERTHAN
+    write_digit_to_file rdi
     
     ; CLOSE the .xml file
     mov rdi, rax

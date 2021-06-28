@@ -10,4 +10,4 @@ ld ./build/lexer.o -o ./build/lexer
 ./build/lexer
 
 # Print exit code
-echo $?
+echo "EXIT CODE:" $?

@@ -2,18 +2,22 @@
 
 %include "../x86_64.inc"
 %include "jack_tokens.inc"
-%include "jack_tokenizer_dfa.s"
-%include "jack_token_type_adf.s"
-%include "jack_xml_writer.s"
+%include "jack_tokenizer.s"
 
 section .data
-  marker db "Marker", 0
   filename db "../../../data/jack/Square.jack", 0
-  output_filename db "./build/output.xml", 0
 
+  rprint db "TOKEN '", 0
+  print_undefined db "' ==> UNDEFINED", 10, 0
+  print_keyword db "' ==> KEYWORD", 10, 0
+  print_symbol db "' ==> SYMBOL", 10, 0
+  print_identifier db "' ==> IDENTIFIER", 10, 0
+  print_integer_constant db "' ==> INTEGER CONSTANT", 10, 0
+  print_string_constant db "' ==> STRING CONSTANT", 10, 0
+  
 section .bss
-  _digit resb 8
   source resb 1024 * 5 ; This allows to save content up to 5 kB
+  char resb 8
 
 section .text
   global _start
@@ -46,25 +50,12 @@ _start:
     pop rdi
     syscall
 
-  open_xml:
-    ; OPEN the .xml file
-    mov rax, SYS_OPEN
-    mov rdi, output_filename
-    mov rsi, O_CREAT + O_WRONLY
-    mov rdx, 0644o
-    syscall
-
-    push rax ; PUSH &filedescriptor to stack
-    
-    ; &filedescriptor should be in RAX
-    write_open_tag_tokens_to_xml
-
-  jack_tokenizer:
+  call_jack_tokenizer:
     mov rsi, 0 ; Start char index
     mov r10, 0 ; Prevent infinite loop (x64 only)
 
-    jack_tokenizer_loop:
-      jack_tokenizer_dfa source, rsi
+    call_jack_tokenizer_loop:
+      jack_tokenizer source, rsi
       ; RAX -> &token
       ; RBX -> file content
       ; RCX -> token length
@@ -72,38 +63,66 @@ _start:
       ; RSI -> last char index
       
       cmp rcx, 0
-      je close_xml
+      je finish
+      
+      print rprint
 
-      mov rbx, rdx
-      mov rdx, rax
-      mov rax, [rsp] ; &filedescriptor (peek stack)
-
-      ; &filedescriptor should be in RAX
-      write_token_to_xml
-
-      print rtoken
       print token
-      print ltoken
 
+      cmp rdx, JACK_TOKEN_KEYWORD
+      je is_keyword
+
+      cmp rdx, JACK_TOKEN_SYMBOL
+      je is_symbol
+
+      cmp rdx, JACK_TOKEN_IDENTIFIER
+      je is_identifier
+
+      cmp rdx, JACK_TOKEN_UNDEFINED
+      je is_undefined
+
+      cmp rdx, JACK_TOKEN_INTEGER_CONSTANT
+      je is_integer_constant
+
+      cmp rdx, JACK_TOKEN_STRING_CONSTANT
+      je is_string_constant
+      
+      call_jack_tokenizer_end:
       inc r10
 
       cmp r10, 1048576
-      je close_xml
+      je finish
       
-      jmp jack_tokenizer_loop
+      jmp call_jack_tokenizer_loop
 
-  close_xml:
-    pop rax ; POP &filedescriptor to stack
-
-    ; &filedescriptor should be in RAX
-    write_close_tag_tokens_to_xml
-    
-    ; CLOSE the .xml file
-    mov rdi, rax
-    mov rax, SYS_CLOSE
-    syscall
-
-    jmp _exit
-
-  _exit:
+  finish:
     exit 0
+
+_print_rax:
+  mov [char], al
+  print char
+  ret
+
+is_undefined:
+  print print_undefined
+  jmp call_jack_tokenizer_end
+
+is_keyword:
+  print print_keyword
+  jmp call_jack_tokenizer_end
+
+is_symbol:
+  print print_symbol
+  jmp call_jack_tokenizer_end
+
+is_identifier:
+  print print_identifier
+  jmp call_jack_tokenizer_end
+
+is_integer_constant:
+  print print_integer_constant
+  jmp call_jack_tokenizer_end
+
+is_string_constant:
+  print print_string_constant
+  jmp call_jack_tokenizer_end
