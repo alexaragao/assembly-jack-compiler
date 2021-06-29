@@ -21,10 +21,10 @@ section .bss
       jne %%reset_token_loop
     
     mov rcx, 0
-
+  
   %%DFA_STATE_0:
     call %%peek_character
-
+        
     ; SKIP CHARACTERS
     cmp al, ASCII_NEWLINE
     je %%DFA_STATE_0
@@ -147,17 +147,17 @@ section .bss
     cmp al, ASCII_r
     je %%DFA_STATE_89
 
-    ; cmp al, 0
-    ; je %%stop_peek
-
-    ; call %%push_character_token
-    ; call %%peek_character
-
     call %%rax_is_alpha_or_underscore
     cmp rdi, 0
     je %%DFA_STATE_3000
 
-    jmp %%stop_peek
+    cmp al, 0
+    je %%stop_peek
+
+    call %%push_character_token
+    call %%peek_character
+
+    jmp %%is_undefined
 
   %%DFA_STATE_1:
     call %%push_character_token
@@ -1594,6 +1594,10 @@ section .bss
 
     ret
   
+  %%is_undefined:
+    mov rdx, JACK_TOKEN_UNDEFINED
+    jmp %%stop_peek
+
   %%is_keyword:
     mov rdx, JACK_TOKEN_KEYWORD
     jmp %%stop_peek

@@ -1,6 +1,13 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## 1.1.1 - 2021-06-28
+### Lexer
+  - Bugfix: Stop peek at undefined tokens
+### Xmler
+  - Bugfix: Stop peek at undefined tokens
+  - Bugfix: Not write undefined tokens
+
 ## 1.1.0 - 2021-06-28
 - Bugfix: Removed float token
 - Update: Create program `xmler` to generate .xml
