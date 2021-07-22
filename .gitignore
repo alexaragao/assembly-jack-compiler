@@ -9,3 +9,5 @@ main.o
 *.old.s
 *.old.asm
 *.old.inc
+
+*.old/

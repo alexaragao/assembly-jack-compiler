@@ -194,6 +194,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_CHAR
     jmp %%is_keyword
   
   %%DFA_STATE_4:
@@ -263,6 +264,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_CLASS
     jmp %%is_keyword
   
   %%DFA_STATE_9:
@@ -391,6 +393,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_CONSTRUCTOR
     jmp %%is_keyword
   
   %%DFA_STATE_19:
@@ -480,6 +483,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_FUNCTION
     jmp %%is_keyword
   
   %%DFA_STATE_26:
@@ -549,6 +553,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_FALSE
     jmp %%is_keyword
   
   %%DFA_STATE_31:
@@ -599,6 +604,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_FIELD
     jmp %%is_keyword
   
   %%DFA_STATE_35:
@@ -675,6 +681,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_METHOD
     jmp %%is_keyword
   
   %%DFA_STATE_41:
@@ -751,6 +758,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_STATIC
     jmp %%is_keyword
   
   %%DFA_STATE_47:
@@ -775,6 +783,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_VAR
     jmp %%is_keyword
   
   %%DFA_STATE_49:
@@ -828,6 +837,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_VOID
     jmp %%is_keyword
   
   %%DFA_STATE_53:
@@ -865,6 +875,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_THIS
     jmp %%is_keyword
   
   %%DFA_STATE_56:
@@ -918,6 +929,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_TRUE
     jmp %%is_keyword
   
   ; FINAL
@@ -929,6 +941,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_IF
     jmp %%is_keyword
   
   %%DFA_STATE_61:
@@ -969,6 +982,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_INT
     jmp %%is_keyword
   
   %%DFA_STATE_64:
@@ -1032,6 +1046,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_WHILE
     jmp %%is_keyword
   
   %%DFA_STATE_69:
@@ -1121,6 +1136,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_BOOLEAN
     jmp %%is_keyword
   
   %%DFA_STATE_76:
@@ -1171,6 +1187,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_NULL
     jmp %%is_keyword
   
   %%DFA_STATE_80:
@@ -1208,6 +1225,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_LET
     jmp %%is_keyword
   
   %%DFA_STATE_83:
@@ -1232,6 +1250,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_DO
     jmp %%is_keyword
   
   %%DFA_STATE_85:
@@ -1282,6 +1301,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_ELSE
     jmp %%is_keyword
   
   %%DFA_STATE_89:
@@ -1358,6 +1378,7 @@ section .bss
     cmp rdi, 0
     je %%DFA_STATE_3000
 
+    mov rbx, JACK_KEYWORD_RETURN
     jmp %%is_keyword
   
   %%DFA_STATE_3000:
@@ -1388,6 +1409,7 @@ section .bss
     mov rax, ASCII_SOL
     call %%push_character_token
     
+    mov rbx, JACK_SYMBOL_SOL
     jmp %%is_symbol
   
   %%DFA_STATE_1003:
@@ -1421,134 +1443,126 @@ section .bss
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_LCURB
     jmp %%is_symbol
   
   %%DFA_STATE_1008:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_RCURB
     jmp %%is_symbol
   
   %%DFA_STATE_1009:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_LPARENTHESIS
     jmp %%is_symbol
   
   %%DFA_STATE_1010:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_RPARENTHESIS
     jmp %%is_symbol
   
   %%DFA_STATE_1011:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_LSQB
     jmp %%is_symbol
   
   %%DFA_STATE_1012:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_RSQB
     jmp %%is_symbol
   
   %%DFA_STATE_1013:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_PERIOD
     jmp %%is_symbol
   
   %%DFA_STATE_1014:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_COMMA
     jmp %%is_symbol
   
   %%DFA_STATE_1015:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_SEMICOLON
     jmp %%is_symbol
   
   %%DFA_STATE_1016:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_PLUS
     jmp %%is_symbol
   
   %%DFA_STATE_1017:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_MINUS
     jmp %%is_symbol
   
   %%DFA_STATE_1018:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_ASTERISK
     jmp %%is_symbol
   
   %%DFA_STATE_1019:
-    mov rax, ASCII_AMP
     call %%push_character_token
-    mov rax, ASCII_a
-    call %%push_character_token
-    mov rax, ASCII_m
-    call %%push_character_token
-    mov rax, ASCII_p
-    call %%push_character_token
-    mov rax, ASCII_SEMICOLON
-    call %%push_character_token
-
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_AMP
     jmp %%is_symbol
   
   %%DFA_STATE_1020:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_VERTICAL_BAR
     jmp %%is_symbol
   
   %%DFA_STATE_1021:
-    mov rax, ASCII_AMP
     call %%push_character_token
-    mov rax, ASCII_l
-    call %%push_character_token
-    mov rax, ASCII_t
-    call %%push_character_token
-    mov rax, ASCII_SEMICOLON
-    call %%push_character_token
-
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_LT
     jmp %%is_symbol
   
   %%DFA_STATE_1022:
-    mov rax, ASCII_AMP
     call %%push_character_token
-    mov rax, ASCII_g
-    call %%push_character_token
-    mov rax, ASCII_t
-    call %%push_character_token
-    mov rax, ASCII_SEMICOLON
-    call %%push_character_token
-
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_GT
     jmp %%is_symbol
   
   %%DFA_STATE_1023:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_EQUALS
     jmp %%is_symbol
   
   %%DFA_STATE_1024:
     call %%push_character_token
     call %%peek_character
 
+    mov rbx, JACK_SYMBOL_TILDE
     jmp %%is_symbol
   
   %%DFA_STATE_1025:
@@ -1611,11 +1625,11 @@ section .bss
     jmp %%stop_peek
 
   %%is_integer_constant:
-    mov rdx, JACK_TOKEN_INTEGER_CONSTANT
+    mov rdx, JACK_CONSTANT_INTEGER
     jmp %%stop_peek
 
   %%is_string_constant:
-    mov rdx, JACK_TOKEN_STRING_CONSTANT
+    mov rdx, JACK_CONSTANT_STRING
     jmp %%stop_peek
 
   %%rax_is_alpha_or_underscore:

@@ -14,7 +14,7 @@ section .data
   print_identifier db "' ==> IDENTIFIER", 10, 0
   print_integer_constant db "' ==> INTEGER CONSTANT", 10, 0
   print_string_constant db "' ==> STRING CONSTANT", 10, 0
-  
+
 section .bss
   source resb 1024 * 5 ; This allows to save content up to 5 kB
   char resb 8
@@ -81,10 +81,10 @@ _start:
       cmp rdx, JACK_TOKEN_UNDEFINED
       je is_undefined
 
-      cmp rdx, JACK_TOKEN_INTEGER_CONSTANT
+      cmp rdx, JACK_CONSTANT_INTEGER
       je is_integer_constant
 
-      cmp rdx, JACK_TOKEN_STRING_CONSTANT
+      cmp rdx, JACK_CONSTANT_STRING
       je is_string_constant
       
       call_jack_tokenizer_end:

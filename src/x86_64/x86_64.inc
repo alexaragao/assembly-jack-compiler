@@ -366,38 +366,38 @@ PREADV2 equ 327
 PWRITEV2 equ 328
 
 %macro print 1
- push rax
- push rbx
- push rcx
- push rdx
- push rdi
- push rsi
- 
- mov rax, %1
- mov [printSpace], rax
- mov rbx, 0
+  push rax
+  push rbx
+  push rcx
+  push rdx
+  push rdi
+  push rsi
 
-%%printLoop:
- mov cl, [rax]
- cmp cl, 0
- je %%endPrintLoop
- inc rbx
- inc rax
- jmp %%printLoop
+  mov rax, %1
+  mov [printSpace], rax
+  mov rbx, 0
 
-%%endPrintLoop:
- mov rax, SYS_WRITE
- mov rdi, STDIN
- mov rsi, [printSpace]
- mov rdx, rbx
- syscall
+  %%printLoop:
+  mov cl, [rax]
+  cmp cl, 0
+  je %%endPrintLoop
+  inc rbx
+  inc rax
+  jmp %%printLoop
 
- pop rsi
- pop rdi
- pop rdx
- pop rcx
- pop rbx
- pop rax
+  %%endPrintLoop:
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, [printSpace]
+  mov rdx, rbx
+  syscall
+
+  pop rsi
+  pop rdi
+  pop rdx
+  pop rcx
+  pop rbx
+  pop rax
 %endmacro
 
 %macro printVal 1
